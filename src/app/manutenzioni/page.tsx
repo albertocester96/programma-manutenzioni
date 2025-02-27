@@ -17,36 +17,36 @@ export default function MaintenancesPage() {
   }, [status]);
   
   const loadMaintenances = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (status) params.append('status', status);
+  setLoading(true);
+  try {
+    const params = new URLSearchParams();
+    if (status) params.append('status', status);
+    
+    console.log('Fetching maintenances with params:', params.toString());
+    
+    const response = await fetch(`/api/maintenances?${params.toString()}`);
+    
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      // Prova a leggere il corpo dell'errore
+      const errorBody = await response.text();
+      console.error('Error response body:', errorBody);
       
-      console.log('Fetching maintenances with params:', params.toString());
-      
-      const response = await fetch(`/api/maintenances?${params.toString()}`);
-      
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) {
-        // Prova a leggere il corpo dell'errore
-        const errorBody = await response.text();
-        console.error('Error response body:', errorBody);
-        
-        throw new Error(`Errore nel caricamento delle manutenzioni (${response.status})`);
-      }
-      
-      const data = await response.json();
-      console.log('Received maintenances:', data);
-      
-      setMaintenances(data);
-    } catch (error) {
-      console.error('Errore nel caricamento delle manutenzioni:', error);
-      // Potresti voler mostrare un messaggio di errore all'utente
-    } finally {
-      setLoading(false);
+      throw new Error(`Errore nel caricamento delle manutenzioni (${response.status})`);
     }
-  };
+    
+    const data = await response.json();
+    console.log('Received maintenances:', data);
+    
+    setMaintenances(data);
+  } catch (error) {
+    console.error('Errore nel caricamento delle manutenzioni:', error);
+    // Potresti voler mostrare un messaggio di errore all'utente
+  } finally {
+    setLoading(false);
+  }
+};
   
   const handleComplete = async (id: string) => {
     try {

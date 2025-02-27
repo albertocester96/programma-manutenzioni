@@ -14,7 +14,7 @@ export default function CreateEquipmentPage() {
     category: '',
     location: '',
     purchaseDate: '',
-    notes: ''
+    notes: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   

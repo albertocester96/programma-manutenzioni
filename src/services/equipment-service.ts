@@ -14,7 +14,8 @@ const mapEquipmentDoc = (doc: any): Equipment => {
     location: doc.location,
     purchaseDate: doc.purchaseDate ? doc.purchaseDate.toISOString() : undefined,
     lastMaintenance: doc.lastMaintenance ? doc.lastMaintenance.toISOString() : undefined,
-    notes: doc.notes
+    notes: doc.notes,
+    status: doc.status,
   };
 };
 

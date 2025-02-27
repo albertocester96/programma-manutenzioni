@@ -1,5 +1,7 @@
 // src/models/equipment.ts
 import mongoose, { Schema, Document } from 'mongoose';
+import { ReactNode } from 'react';
+
 
 // Definizione dell'interfaccia TypeScript per il documento
 export interface IEquipment extends Document {
@@ -10,12 +12,14 @@ export interface IEquipment extends Document {
   purchaseDate?: Date;
   lastMaintenance?: Date;
   notes?: string;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 // Tipo per il passaggio di dati nella UI
 export type Equipment = {
+  status: ReactNode;
   id: string;
   name: string;
   serialNumber: string;
@@ -24,6 +28,7 @@ export type Equipment = {
   purchaseDate?: string;
   lastMaintenance?: string;
   notes?: string;
+  
 }
 
 // Schema Mongoose
@@ -34,7 +39,8 @@ const EquipmentSchema = new Schema({
   location: { type: String, required: true },
   purchaseDate: { type: Date },
   lastMaintenance: { type: Date },
-  notes: { type: String }
+  notes: { type: String },
+  status: { type: String, required: true}
 }, { 
   timestamps: true 
 });
