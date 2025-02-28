@@ -16,7 +16,7 @@ export default function EquipmentList({ equipments, onDelete }: EquipmentListPro
         <thead>
           <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Nome</th>
-            <th className="py-3 px-6 text-left">Numero Seriale</th>
+            <th className="py-3 px-6 text-left">Tipologia / Modello</th>
             <th className="py-3 px-6 text-left">Categoria</th>
             <th className="py-3 px-6 text-left">Ubicazione</th>
             <th className="py-3 px-6 text-left">Ultima Manutenzione</th>
@@ -27,7 +27,7 @@ export default function EquipmentList({ equipments, onDelete }: EquipmentListPro
           {equipments.map((equipment) => (
             <tr key={equipment.id} className="border-b border-gray-200 hover:bg-gray-50">
               <td className="py-3 px-6 text-left">{equipment.name}</td>
-              <td className="py-3 px-6 text-left">{equipment.serialNumber}</td>
+              <td className="py-3 px-6 text-left">{equipment.type}</td>
               <td className="py-3 px-6 text-left">{equipment.category}</td>
               <td className="py-3 px-6 text-left">{equipment.location}</td>
               <td className="py-3 px-6 text-left">
