@@ -7,7 +7,7 @@
       "esModuleInterop": true,
       "outDir": "../electron-dist",
       "rootDir": ".",
-      "sourceMap": true
+      "sourceMap": true,
     },
     "include": [
       "**/*"
