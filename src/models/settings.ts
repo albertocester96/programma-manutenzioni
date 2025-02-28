@@ -18,7 +18,7 @@ const CategorySchema = new Schema({
   type: { 
     type: String, 
     required: true,
-    enum: ['equipment_category', 'equipment_location']
+    enum: ['equipment_category', 'equipment_location', 'staff_role']
   }
 }, { 
   timestamps: true 
