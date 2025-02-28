@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 // Definizione dell'interfaccia TypeScript per il documento
 export interface IEquipment extends Document {
   name: string;
-  serialNumber: string;
+  type: string;
   category: string;
   location: string;
   purchaseDate?: Date;
@@ -22,7 +22,7 @@ export type Equipment = {
   status: ReactNode;
   id: string;
   name: string;
-  serialNumber: string;
+  type: string;
   category: string;
   location: string;
   purchaseDate?: string;
@@ -34,13 +34,13 @@ export type Equipment = {
 // Schema Mongoose
 const EquipmentSchema = new Schema({
   name: { type: String, required: true },
-  serialNumber: { type: String, required: true, unique: true },
+  type: { type: String, required: true, unique: true },
   category: { type: String, required: true },
   location: { type: String, required: true },
   purchaseDate: { type: Date },
   lastMaintenance: { type: Date },
   notes: { type: String },
-  status: { type: String, required: true}
+  status: { type: String}
 }, { 
   timestamps: true 
 });

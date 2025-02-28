@@ -56,7 +56,7 @@ export default function EquipmentPage() {
   // Filtra le attrezzature in base al termine di ricerca
   const filteredEquipments = equipments.filter(equipment => 
     equipment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    equipment.serialNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    equipment.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
     equipment.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
     equipment.location.toLowerCase().includes(searchTerm.toLowerCase())
   );

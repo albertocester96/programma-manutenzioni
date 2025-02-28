@@ -10,7 +10,7 @@ export default function CreateEquipmentPage() {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: '',
-    serialNumber: '',
+    type: '',
     category: '',
     location: '',
     purchaseDate: '',
@@ -41,8 +41,8 @@ export default function CreateEquipmentPage() {
       newErrors.name = 'Il nome è obbligatorio';
     }
     
-    if (!formData.serialNumber.trim()) {
-      newErrors.serialNumber = 'Il numero seriale è obbligatorio';
+    if (!formData.type.trim()) {
+      newErrors.type = 'La tipologia/modello è obbligatorio';
     }
     
     if (!formData.category.trim()) {
@@ -125,18 +125,18 @@ export default function CreateEquipmentPage() {
             </div>
             
             <div>
-              <label htmlFor="serialNumber" className="block text-sm font-medium text-gray-700">Numero Seriale</label>
+              <label htmlFor="type" className="block text-sm font-medium text-gray-700">Tipologia / Modello </label>
               <input
                 type="text"
-                id="serialNumber"
-                name="serialNumber"
-                value={formData.serialNumber}
+                id="type"
+                name="type"
+                value={formData.type}
                 onChange={handleChange}
                 className={`mt-1 block w-full rounded-md shadow-sm p-2 border ${
-                  errors.serialNumber ? 'border-red-500' : 'border-gray-300'
+                  errors.type ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
-              {errors.serialNumber && <p className="mt-1 text-sm text-red-500">{errors.serialNumber}</p>}
+              {errors.type && <p className="mt-1 text-sm text-red-500">{errors.type}</p>}
             </div>
             
             <div>

@@ -9,7 +9,7 @@ const mapEquipmentDoc = (doc: any): Equipment => {
   return {
     id: doc._id.toString(),
     name: doc.name,
-    serialNumber: doc.serialNumber,
+    type: doc.type,
     category: doc.category,
     location: doc.location,
     purchaseDate: doc.purchaseDate ? doc.purchaseDate.toISOString() : undefined,
@@ -33,16 +33,22 @@ export async function getEquipmentById(id: string): Promise<Equipment | null> {
   await connectDB();
   
   if (!mongoose.isValidObjectId(id)) {
+    console.error('ID non valido', id);
     return null;
   }
   
-  const equipment = await EquipmentModel.findById(id);
-  
-  if (!equipment) {
-    return null;
+  try{
+    const equipment = await EquipmentModel.findById(id);
+    console.log('Risultato query:', equipment);
+    if (!equipment) {
+      return null;
+    }
+    
+    return mapEquipmentDoc(equipment);
+  } catch (error) {
+    console.error('Errore nel recupero attrezzatura:', error);
+    throw error;
   }
-  
-  return mapEquipmentDoc(equipment);
 }
 
 // Funzione per creare una nuova attrezzatura

@@ -67,7 +67,7 @@ export default function EquipmentDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h2 className="text-lg font-semibold text-gray-700 mb-2">Dettagli Attrezzatura</h2>
-            <p><strong>Numero di Serie:</strong> {equipment.serialNumber}</p>
+            <p><strong>Tipologia / Modello:</strong> {equipment.type}</p>
             <p><strong>Categoria:</strong> {equipment.category}</p>
           </div>
           
