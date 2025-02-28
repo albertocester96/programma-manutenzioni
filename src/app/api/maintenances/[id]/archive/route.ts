@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { archiveMaintenance } from '@/services/maintenance-service';
 
-
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: {params: Promise<{ id: string}> }
 ) {
-
-  const id = (await context.params).id
+  const id = (await params).id;
   try {
-    
+   
     const maintenance = await archiveMaintenance(id);
     
     if (!maintenance) {
