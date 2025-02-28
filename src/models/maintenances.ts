@@ -1,5 +1,5 @@
 // src/models/maintenances.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, BooleanExpression } from 'mongoose';
 
 // Tipo per il passaggio di dati nella UI
 export type Maintenance = {
@@ -15,6 +15,10 @@ export type Maintenance = {
   completedDate?: string;
   completedBy?: string;
   notes?: string;
+  maintenanceType: 'ordinaria' | 'straordinaria';
+  isRecurring: boolean;
+  frequency?: 'giornaliera' | 'settimanale' | 'mensile' | 'trimestrale' | 'semestrale' | 'novemesi' | 'annuale' | 'biennale' | 'triennale';
+  parentMaintenanceId?: string;
 }
 
 // Definizione dell'interfaccia TypeScript per il documento
@@ -30,9 +34,14 @@ export interface IMaintenance extends Document {
   completedDate?: Date;
   completedBy?: string;
   notes?: string;
+  maintenanceType: 'ordinaria' | 'straordinaria';
+  isRecurring: boolean;
+  frequency?: 'giornaliera' | 'settimanale' | 'mensile' | 'trimestrale' | 'semestrale' | 'novemesi' | 'annuale' | 'biennale' | 'triennale';
+  parentMaintenanceId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 // Schema Mongoose
 const MaintenanceSchema = new Schema({
@@ -58,7 +67,28 @@ const MaintenanceSchema = new Schema({
   assignedTo: { type: String },
   completedDate: { type: Date },
   completedBy: { type: String },
-  notes: { type: String }
+  notes: { type: String },
+  // Nuovi campi per gestire la ricorrenza
+  maintenanceType: {
+    type: String,
+    enum: ['ordinaria', 'straordinaria'],
+    required: true,
+    default: 'straordinaria'
+  },
+  isRecurring: {
+    type: Boolean,
+    default: false
+  },
+  frequency: {
+    type: String,
+    enum: ['giornaliera', 'settimanale', 'mensile', 'trimestrale', 'semestrale', 'novemesi', 'annuale', 'biennale', 'triennale'],
+    required: function(this: any) { return this.isRecurring; } // Richiesto solo se isRecurring è true
+  },
+  parentMaintenanceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Maintenance',
+    default: null // Null per manutenzioni originali o non ricorrenti
+  }
 }, { 
   timestamps: true 
 });

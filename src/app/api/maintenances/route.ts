@@ -26,19 +26,33 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    console.log('Dati ricevuti per la creazione:', data);
-    const maintenance = await createMaintenance(data);
-    return NextResponse.json(maintenance, { status: 201 });
-  } catch (error: any) { // Cast error to any or use a more specific type
-    console.error('Errore API maintenances POST:', error);
-    return NextResponse.json(
-      { 
-        error: 'Errore durante la creazione della manutenzione', 
-        details: error.message || 'Errore sconosciuto',
-        stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
-      },
-      { status: 500 }
-    );
-  }
+    
+    // Log dei dati ricevuti con evidenza dei campi di ricorrenza
+    console.log('Dati ricevuti per la creazione:', {
+      ...data,
+      ricorrenza: {
+        tipo: data.maintenanceType,
+        isRecurring: data.isRecurring,
+        frequency: data.frequency,
+        parentId: data.parentMaintenanceId
+      }
+    });
+// Validazione per manutenzioni ricorrenti
+if (data.isRecurring === true && !data.frequency) {
+  throw new Error('Per le manutenzioni ricorrenti è necessario specificare una frequenza');
 }
-  
+
+const maintenance = await createMaintenance(data);
+return NextResponse.json(maintenance, { status: 201 });
+} catch (error: any) {
+console.error('Errore API maintenances POST:', error);
+return NextResponse.json(
+  {
+    error: 'Errore durante la creazione della manutenzione',
+    details: error.message || 'Errore sconosciuto',
+    stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
+  },
+  { status: 500 }
+);
+}
+}

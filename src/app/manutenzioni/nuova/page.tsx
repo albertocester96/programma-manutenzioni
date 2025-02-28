@@ -18,7 +18,10 @@ export default function CreateMaintenancePage() {
     scheduledDate: '',
     priority: 'media' as 'bassa' | 'media' | 'alta',
     assignedTo: '',
-    notes: ''
+    notes: '',
+    maintenanceType: 'straordinaria' as 'ordinaria' | 'straordinaria',
+    isRecurring: false,
+    frequency: 'mensile' as 'giornaliera' | 'settimanale' | 'mensile' | 'trimestrale' | 'semestrale' | 'novemesi' | 'annuale' | 'biennale' | 'triennale'
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   
@@ -43,10 +46,21 @@ export default function CreateMaintenancePage() {
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    
+    if (name === 'maintenanceType') {
+      // Se cambio il tipo di manutenzione, aggiorno anche isRecurring
+      const typedValue = value as 'ordinaria' | 'straordinaria';
+      setFormData({
+        ...formData,
+        maintenanceType: typedValue,
+        isRecurring: value === 'ordinaria'
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
     
     // Rimuovi l'errore quando l'utente inizia a modificare un campo
     if (errors[name]) {
@@ -55,6 +69,14 @@ export default function CreateMaintenancePage() {
         [name]: ''
       });
     }
+  };
+  
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: checked
+    });
   };
   
   const validate = (): boolean => {
@@ -74,6 +96,10 @@ export default function CreateMaintenancePage() {
     
     if (!formData.scheduledDate) {
       newErrors.scheduledDate = 'La data pianificata è obbligatoria';
+    }
+    
+    if (formData.isRecurring && !formData.frequency) {
+      newErrors.frequency = 'La frequenza è obbligatoria per le manutenzioni ricorrenti';
     }
     
     setErrors(newErrors);
@@ -129,7 +155,7 @@ export default function CreateMaintenancePage() {
     } finally {
       setSubmitting(false);
     }
-  };;
+  };
   
   if (loading) {
     return (
@@ -198,7 +224,7 @@ export default function CreateMaintenancePage() {
                 <option value="">Seleziona un'attrezzatura</option>
                 {equipments.map((equipment) => (
                   <option key={equipment.id} value={equipment.id}>
-                    {equipment.name} ({equipment.serialNumber})
+                    {equipment.name} ({equipment.type})
                   </option>
                 ))}
               </select>
@@ -219,6 +245,68 @@ export default function CreateMaintenancePage() {
               />
               {errors.scheduledDate && <p className="mt-1 text-sm text-red-500">{errors.scheduledDate}</p>}
             </div>
+            
+            {/* Nuovo campo per tipo di manutenzione */}
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Tipo di manutenzione</label>
+              <div className="flex space-x-4">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="maintenanceTypeStr"
+                    name="maintenanceType"
+                    value="straordinaria"
+                    checked={formData.maintenanceType === 'straordinaria'}
+                    onChange={handleChange}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="maintenanceTypeStr" className="ml-2 block text-sm text-gray-700">
+                    Straordinaria
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="maintenanceTypeOrd"
+                    name="maintenanceType"
+                    value="ordinaria"
+                    checked={formData.maintenanceType === 'ordinaria'}
+                    onChange={handleChange}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="maintenanceTypeOrd" className="ml-2 block text-sm text-gray-700">
+                    Ordinaria (Ricorrente)
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            {/* Campo per la frequenza (visibile solo se è ricorrente) */}
+            {formData.isRecurring && (
+              <div className="col-span-2">
+                <label htmlFor="frequency" className="block text-sm font-medium text-gray-700">Frequenza</label>
+                <select
+                  id="frequency"
+                  name="frequency"
+                  value={formData.frequency}
+                  onChange={handleChange}
+                  className={`mt-1 block w-full rounded-md shadow-sm p-2 border ${
+                    errors.frequency ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                >
+                  <option value="giornaliera">Giornaliera</option>
+                  <option value="settimanale">Settimanale</option>
+                  <option value="mensile">Mensile</option>
+                  <option value="trimestrale">Trimestrale</option>
+                  <option value="semestrale">Semestrale</option>
+                  <option value="novemesi">Ogni 9 mesi</option>
+                  <option value="annuale">Annuale</option>
+                  <option value="biennale">Ogni 2 anni</option>
+                  <option value="triennale">Ogni 3 anni</option>
+                </select>
+                {errors.frequency && <p className="mt-1 text-sm text-red-500">{errors.frequency}</p>}
+              </div>
+            )}
             
             <div>
               <label htmlFor="priority" className="block text-sm font-medium text-gray-700">Priorità</label>
@@ -278,12 +366,12 @@ export default function CreateMaintenancePage() {
               type="submit"
               disabled={submitting}
               className="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
-              >
-                {submitting ? 'Salvataggio...' : 'Salva'}
-              </button>
-            </div>
-          </form>
-        </div>
+            >
+              {submitting ? 'Salvataggio...' : 'Salva'}
+            </button>
+          </div>
+        </form>
       </div>
-    );
-  }
+    </div>
+  );
+}
