@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 
 export interface ICategory extends Document {
   name: string;
-  type: 'equipment_category' | 'equipment_location';
+  type: 'equipment_category' | 'equipment_location'| 'staff_role';
   createdAt: Date;
   updatedAt: Date;
 }

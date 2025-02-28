@@ -5,9 +5,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Equipment } from '@/models/equipment';
 import Link from 'next/link';
+import { useStaffRoles } from '@/hooks/useStaffRoles';
+
 
 export default function CreateMaintenancePage() {
   const router = useRouter();
+  const { staffRoles} = useStaffRoles();
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -325,14 +328,20 @@ export default function CreateMaintenancePage() {
             
             <div>
               <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700">Assegnato a</label>
-              <input
-                type="text"
+              <select
                 id="assignedTo"
                 name="assignedTo"
                 value={formData.assignedTo}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md shadow-sm p-2 border border-gray-300"
-              />
+              >
+                <option value="">Non assegnato</option>
+                {staffRoles.map((role) => (
+                  <option key={role.id} value={role.name}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
             </div>
             
             <div className="col-span-2">

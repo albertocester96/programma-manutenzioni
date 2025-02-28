@@ -12,7 +12,8 @@ interface Category {
 export default function SettingsPage() {
   const [categoryTypes] = useState([
     { key: 'equipment_category', label: 'Categorie Attrezzature' },
-    { key: 'equipment_location', label: 'Ubicazioni' }
+    { key: 'equipment_location', label: 'Ubicazioni' },
+    { key: 'staff_role', label: 'Ruoli Personale' }
   ]);
   const [activeType, setActiveType] = useState('equipment_category');
   const [categories, setCategories] = useState<Category[]>([]);
