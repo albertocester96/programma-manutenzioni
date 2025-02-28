@@ -1,27 +1,29 @@
-//src/app/api/equipment/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getEquipmentById, updateEquipment, deleteEquipment } from '@/services/equipment-service';
 
+// Define a custom type for params
+type Params = {
+  id: string;
+};
+
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-
-  const params = await context.params;
-
+  const id = (await params).id;
   try {
-    const equipment = await getEquipmentById(params.id);
-
+    const equipment = await getEquipmentById(id);
+    
     if (!equipment) {
       return NextResponse.json(
         { error: 'Attrezzatura non trovata' },
         { status: 404 }
       );
     }
-
+    
     return NextResponse.json(equipment);
   } catch (error) {
-    console.error(`Errore API equipment/${params.id} GET:`, error);
+    console.error(`Errore API equipment/${id} GET:`, error);
     return NextResponse.json(
       { error: 'Errore durante il recupero dell\'attrezzatura' },
       { status: 500 }
@@ -31,14 +33,13 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
-) {
-  const params = await context.params;
-
+  { params }: { params: Promise<{ id: string }> }
+) { 
+  const id = (await params).id;
   try {
-    
+   
     const data = await request.json();
-    const equipment = await updateEquipment(params.id, data);
+    const equipment = await updateEquipment(id, data);
     
     if (!equipment) {
       return NextResponse.json(
@@ -49,7 +50,7 @@ export async function PUT(
     
     return NextResponse.json(equipment);
   } catch (error) {
-    console.error(`Errore API equipment/${params.id} PUT:`, error);
+    console.error(`Errore API equipment/${id} PUT:`, error);
     return NextResponse.json(
       { error: 'Errore durante l\'aggiornamento dell\'attrezzatura' },
       { status: 500 }
@@ -58,13 +59,13 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
-  context: { params: { id: string } }
+  request: NextRequest,  
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const params = await context.params;
-
+   const id = (await params).id;
   try {
-    const success = await deleteEquipment(params.id);
+  
+    const success = await deleteEquipment(id);
     
     if (!success) {
       return NextResponse.json(
@@ -75,11 +76,10 @@ export async function DELETE(
     
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(`Errore API equipment/${params.id} DELETE:`, error);
+    console.error(`Errore API equipment/${id} DELETE:`, error);
     return NextResponse.json(
       { error: 'Errore durante l\'eliminazione dell\'attrezzatura' },
       { status: 500 }
     );
   }
 }
-

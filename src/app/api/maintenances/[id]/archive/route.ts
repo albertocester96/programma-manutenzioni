@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { archiveMaintenance } from '@/services/maintenance-service';
 
+
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
 
-  const params = await context.params;
+  const id = (await context.params).id
   try {
-    const maintenance = await archiveMaintenance(params.id);
+    
+    const maintenance = await archiveMaintenance(id);
     
     if (!maintenance) {
       return NextResponse.json(
@@ -19,7 +21,7 @@ export async function PATCH(
     
     return NextResponse.json(maintenance);
   } catch (error) {
-    console.error(`Errore API maintenance/${params.id}/archive PATCH:`, error);
+    console.error(`Errore API maintenance/${id}/archive PATCH:`, error);
     return NextResponse.json(
       { error: 'Errore durante l\'archiviazione della manutenzione' },
       { status: 500 }
