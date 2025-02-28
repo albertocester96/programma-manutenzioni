@@ -3,8 +3,10 @@ import { archiveMaintenance } from '@/services/maintenance-service';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
+
+  const params = await context.params;
   try {
     const maintenance = await archiveMaintenance(params.id);
     

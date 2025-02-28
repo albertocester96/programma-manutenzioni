@@ -4,9 +4,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useCategories } from '@/hooks/useCategories';
 
 export default function CreateEquipmentPage() {
   const router = useRouter();
+
+  // Aggiungi queste righe
+  const { categories, loading: categoriesLoading } = useCategories('equipment_category');
+  const { categories: locations, loading: locationsLoading } = useCategories('equipment_location');
+
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -141,31 +147,45 @@ export default function CreateEquipmentPage() {
             
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoria</label>
-              <input
-                type="text"
+              <select
                 id="category"
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
+                disabled={categoriesLoading}
                 className={`mt-1 block w-full rounded-md shadow-sm p-2 border ${
                   errors.category ? 'border-red-500' : 'border-gray-300'
                 }`}
-              />
+              >
+                <option value="">Seleziona una categoria</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
               {errors.category && <p className="mt-1 text-sm text-red-500">{errors.category}</p>}
             </div>
             
             <div>
               <label htmlFor="location" className="block text-sm font-medium text-gray-700">Ubicazione</label>
-              <input
-                type="text"
+              <select
                 id="location"
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
+                disabled={locationsLoading}
                 className={`mt-1 block w-full rounded-md shadow-sm p-2 border ${
                   errors.location ? 'border-red-500' : 'border-gray-300'
                 }`}
-              />
+              >
+                <option value="">Seleziona un'ubicazione</option>
+                {locations.map((location) => (
+                  <option key={location.id} value={location.name}>
+                    {location.name}
+                  </option>
+                ))}
+              </select>
               {errors.location && <p className="mt-1 text-sm text-red-500">{errors.location}</p>}
             </div>
             

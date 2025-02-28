@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Settings } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -50,6 +51,14 @@ export default function Navbar() {
                 }`}
               >
                 Archivio
+              </Link>
+              <Link 
+                href="/impostazioni" 
+                className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${
+                  isActive('/impostazioni') ? 'bg-blue-700 text-white' : 'text-white hover:bg-blue-500'
+                }`}
+              >
+                <Settings size={16} className="mr-1" /> Impostazioni
               </Link>
             </div>
           </div>

@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Equipment } from '@/models/equipment';
 import Link from 'next/link';
+import { useCategories } from '@/hooks/useCategories';
 
 export default function EditEquipmentPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
+  const { categories, loading: categoriesLoading } = useCategories('equipment_category');
+  const { categories: locations, loading: locationsLoading } = useCategories('equipment_location');
   const [equipment, setEquipment] = useState<Equipment | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [submitting, setSubmitting] = useState<boolean>(false);
